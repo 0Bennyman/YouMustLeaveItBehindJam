@@ -34,8 +34,6 @@ public class PlayerMove : MonoBehaviour
 
     void Start()
     {
-        //charControl = GetComponent<CharacterController>();
-        //rb = GetComponent<Rigidbody>();
         if (isPlayer)
         {
             lockMovement = false;
@@ -97,7 +95,6 @@ public class PlayerMove : MonoBehaviour
         if (!controller.isGrounded && !lockMovement)
         {
             rot += 10;
-            //transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x+rot, transform.rotation.y, transform.rotation.z));
         }
 
         if (!lockMovement)

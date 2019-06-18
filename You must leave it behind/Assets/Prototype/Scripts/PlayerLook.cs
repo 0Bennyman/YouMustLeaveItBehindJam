@@ -49,8 +49,6 @@ public class PlayerLook : MonoBehaviour
             targetRotCam.x = 270;
         }
 
-        //print(mouseY);
-
 
         transform.rotation = Quaternion.Euler(targetRotCam);
         playerBody.rotation = Quaternion.Euler(targetRotBody);

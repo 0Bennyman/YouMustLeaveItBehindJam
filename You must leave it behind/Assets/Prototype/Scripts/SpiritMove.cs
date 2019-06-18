@@ -91,9 +91,8 @@ public class SpiritMove : MonoBehaviour
             moving = true;
         }
 
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            //Do a check to make sure we aren't looking at anyone first
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
             if (Input.GetKeyDown(KeyCode.F))

@@ -29,7 +29,6 @@ public class SpiritSwitch : MonoBehaviour
 
         if (bodyToSwitch == Player)
         {
-            //Player.SetActive(true);
             moveSpirit.speed = 0;
             Spirit.transform.position = new Vector3(999, 999, 999);
             Spirit.SetActive(false);
@@ -74,7 +73,6 @@ public class SpiritSwitch : MonoBehaviour
         moveSpirit.vulnrable = true;
 
         StartCoroutine("FadeIn");
-        //Player.SetActive(false);
     }
 
     public void PossessEnemy()
