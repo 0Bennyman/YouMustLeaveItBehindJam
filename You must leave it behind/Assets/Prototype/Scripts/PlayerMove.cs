@@ -66,13 +66,37 @@ public class PlayerMove : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
-            if (Input.GetKeyDown(KeyCode.E))
+
+            if (hit.transform.tag == "Button")
             {
-                if (hit.transform.tag == "Button")
+                if (Input.GetKeyDown(KeyCode.E))
                 {
                     hit.transform.gameObject.GetComponent<ButtonScript>().ActivateButton();
                 }
+
+                hit.transform.gameObject.GetComponent<ButtonScript>().DisplayText();
+
             }
+
+            if (hit.transform.tag == "Table")
+            {
+                TableFlipping table;
+                table = hit.transform.GetComponent<TableFlipping>();
+
+                if (table == null)
+                {
+                    return;
+                }
+
+                table.lookedAt = true;
+                table.DisplayHighlight();
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    table.FlipTable();
+                }
+            }
+
 
         }
 

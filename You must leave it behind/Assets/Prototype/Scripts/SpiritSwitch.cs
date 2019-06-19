@@ -32,13 +32,10 @@ public class SpiritSwitch : MonoBehaviour
         animRecord = gameObject.GetComponent<AnimationRecorder>();
         curBody = Player;
         curCamera = pCamera;
+
+        SwitchToPlayerBody(Player);
+
     }
-
-
-
-
-
-
 
 
     public void SwitchToPlayerBody(GameObject bodyToSwitch)
@@ -90,6 +87,13 @@ public class SpiritSwitch : MonoBehaviour
             //animRecord.shouldPlay = true;
             //animRecord.PlayRecording();
 
+            //Spirit.transform.position = new Vector3(999, 999, 999);
+            //Spirit.transform.position = new Vector3(0, 0, 999);
+
+            Spirit.transform.position = Player.transform.position;
+
+
+
             StartCoroutine("FadeIn");
 
         }
@@ -98,6 +102,7 @@ public class SpiritSwitch : MonoBehaviour
             moveSpirit.speed = 0;
             sCamera.SetActive(false);
             moveSpirit.enabled = false;
+
             //Spirit.transform.position = new Vector3(999, 999, 999);
             //Spirit.SetActive(false);
 
@@ -113,6 +118,9 @@ public class SpiritSwitch : MonoBehaviour
             dot.color = new Color(dot.color.r, dot.color.g, dot.color.b, 0.3f);
 
             fade.color = new Color(fade.color.r, fade.color.g, fade.color.b, 1);
+
+            //Spirit.transform.position = new Vector3(999, 999, 999);
+
             StartCoroutine("FadeIn");
 
         }
@@ -152,7 +160,6 @@ public class SpiritSwitch : MonoBehaviour
                 anim.StartRecording();
             }
 
-
             timer = 0;
             StartCoroutine("countTimer");
         }
@@ -161,6 +168,7 @@ public class SpiritSwitch : MonoBehaviour
     public void PossessEnemy()
     {
         //Maybe not nessesary if we just do it in 1 void
+
     }
 
 

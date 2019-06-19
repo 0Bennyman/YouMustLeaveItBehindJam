@@ -9,6 +9,8 @@ TagManager:
   - Enemy
   - Light
   - Button
+  - LightArea
+  - Table
   layers:
   - Default
   - TransparentFX

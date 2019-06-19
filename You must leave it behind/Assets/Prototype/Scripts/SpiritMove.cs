@@ -49,10 +49,22 @@ public class SpiritMove : MonoBehaviour
             }
         }
 
-        if (collision.tag == "Light")
+        if (collision.tag == "LightArea")
         {
-            Health -= damageSpeed * Time.deltaTime;
-            postVol.profile = inLight;
+            GameObject light = collision.GetComponent<LightChild>().light;
+            collision.gameObject.SetActive(false);
+            if (Physics.Raycast(transform.position, (light.transform.position - transform.position), out hit, Mathf.Infinity))
+            {
+                if (hit.transform.tag == "Light")
+                {
+                    Health -= damageSpeed * Time.deltaTime;
+                    postVol.profile = inLight;
+                }
+
+            }
+            collision.gameObject.SetActive(true);
+
+
         }
 
     }
@@ -74,8 +86,50 @@ public class SpiritMove : MonoBehaviour
         postVol = cam.GetComponent<PostProcessVolume>();
     }
 
+
+    GameObject GetClosestObject(GameObject[] obj)
+    {
+        GameObject tMin = null;
+        float minDist = Mathf.Infinity;
+        Vector3 currentPos = transform.position;
+        foreach (GameObject t in obj)
+        {
+            float dist = Vector3.Distance(t.transform.position, currentPos);
+            if (dist < minDist)
+            {
+                tMin = t;
+                minDist = dist;
+            }
+        }
+        return tMin;
+    }
+
+
+    void CheckHitLight()
+    {
+        GameObject[] trans = GameObject.FindGameObjectsWithTag("Light");
+        GameObject light = GetClosestObject(trans);
+        if (Physics.Raycast(transform.position, (light.transform.position - transform.position), out hit, Mathf.Infinity))
+        {
+            if (hit.transform.tag == "Light")
+            {
+                Health -= damageSpeed * Time.deltaTime;
+                postVol.profile = inLight;
+            }
+            else
+            {
+                postVol.profile = normal;
+            }
+
+        }
+
+    }
+
     void Update()
     {
+
+        CheckHitLight();
+
         moving = false;
         UpdateHealth();
         if (Input.GetKey(KeyCode.W))
