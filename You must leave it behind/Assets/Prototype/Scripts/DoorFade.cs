@@ -16,6 +16,8 @@ public class DoorFade : MonoBehaviour
 
     private Color myColor;
 
+    public SpiritSwitch spirSwitch;
+
     private void Start()
     {
         mesh = gameObject.GetComponent<MeshRenderer>();
@@ -24,6 +26,15 @@ public class DoorFade : MonoBehaviour
 
     private void Update()
     {
+
+        if (!spirSwitch.curSpirit)
+        {
+            alpha = 1;
+            mesh.enabled = true;
+            mesh.material.color = new Color(myColor.r, myColor.g, myColor.b, alpha);
+            return;
+        }
+
         if (Vector3.Distance(transform.position, spirit.transform.position) > 100)
         {
             alpha = 1;

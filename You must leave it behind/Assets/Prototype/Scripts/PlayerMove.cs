@@ -32,6 +32,10 @@ public class PlayerMove : MonoBehaviour
 
     private EnemyAI ai;
 
+    public GameObject eye1, eye2;
+
+    private RaycastHit hit;
+
     void Start()
     {
         if (isPlayer)
@@ -45,11 +49,34 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
-
+        PressButton();
         CheckButtonPress();
         MovePlayer();
     }
 
+
+    void PressButton()
+    {
+        if (lockMovement)
+        {
+            return;
+        }
+
+        Ray ray = myCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (hit.transform.tag == "Button")
+                {
+                    hit.transform.gameObject.GetComponent<ButtonScript>().ActivateButton();
+                }
+            }
+
+        }
+
+    }
 
     void CheckButtonPress()
     {

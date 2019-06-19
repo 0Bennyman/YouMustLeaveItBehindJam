@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Enemy
   - Light
+  - Button
   layers:
   - Default
   - TransparentFX

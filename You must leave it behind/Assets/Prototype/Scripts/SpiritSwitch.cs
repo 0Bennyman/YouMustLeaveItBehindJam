@@ -22,7 +22,8 @@ public class SpiritSwitch : MonoBehaviour
 
     private float timer;
 
-    private bool curSpirit;
+    [HideInInspector]
+    public bool curSpirit;
 
 
 
@@ -133,6 +134,11 @@ public class SpiritSwitch : MonoBehaviour
 
         PlayerMove aiP = body.GetComponent<PlayerMove>();
         aiP.enabled = false;
+        if (aiP.eye1 != null)
+        {
+            aiP.eye1.SetActive(true);
+            aiP.eye2.SetActive(true);
+        }
 
 
         StartCoroutine("FadeIn");
