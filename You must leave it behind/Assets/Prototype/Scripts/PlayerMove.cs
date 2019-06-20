@@ -13,20 +13,22 @@ public class PlayerMove : MonoBehaviour
 
     public float jumpForce;
     public CharacterController controller;
-    public GameObject playerModel;
+    public GameObject playerModel,crouchCamera;
 
     public GameObject myCamera;
 
     public Transform target;
     public Transform pivot;
 
-    private bool doubleJump;
+    private bool doubleJump,shouldCrouch;
 
     public bool lockMovement = true;
     public bool isPlayer;
 
     public Vector3 moveDirection;
     public float gravityScale, yAdjust;
+
+    private Vector3 crouchCameraPos,normalCameraPos;
 
     public SpiritSwitch switchSpirit;
 
@@ -45,14 +47,39 @@ public class PlayerMove : MonoBehaviour
 
         ai = gameObject.GetComponent<EnemyAI>();
 
+
     }
 
     void Update()
     {
         PressButton();
         CheckButtonPress();
+        CheckCrouch();
         MovePlayer();
     }
+
+
+    void CheckCrouch()
+    {
+
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            shouldCrouch = !shouldCrouch;
+
+            //Temporary! Should be an animation with the player model!
+
+            crouchCameraPos = crouchCamera.transform.position;
+            normalCameraPos = transform.position;
+
+            StopCoroutine("Crouching");
+            StartCoroutine("Crouching");
+        }
+
+
+    }
+
+
+
 
 
     void PressButton()
@@ -148,20 +175,6 @@ public class PlayerMove : MonoBehaviour
             rot += 10;
         }
 
-        if (!lockMovement)
-        {
-            if (controller.isGrounded && Input.GetButtonDown("Jump") || !doubleJump && Input.GetButtonDown("Jump"))
-            {
-                moveDirection.y = jumpForce;
-                jumpCount += 1;
-                if (!controller.isGrounded && jumpCount >= 2)
-                {
-                    doubleJump = true;
-                }
-
-            }
-        }
-
 
 
 
@@ -181,7 +194,37 @@ public class PlayerMove : MonoBehaviour
 
 
     }
+
+
+    IEnumerator Crouching()
+    {
+        yield return new WaitForSeconds(.01f);
+        if (shouldCrouch)
+        {
+            if (Vector3.Distance(myCamera.transform.position, crouchCameraPos) > .1f)
+            {
+                myCamera.transform.position = Vector3.MoveTowards(myCamera.transform.position, new Vector3(myCamera.transform.position.x,crouchCameraPos.y, myCamera.transform.position.z), 8 * Time.deltaTime);
+                StartCoroutine("Crouching");
+            }
+        }
+        else
+        {
+            if (Vector3.Distance(myCamera.transform.position, normalCameraPos) > .1f)
+            {
+                myCamera.transform.position = Vector3.MoveTowards(myCamera.transform.position, new Vector3(myCamera.transform.position.x, normalCameraPos.y+.1f, myCamera.transform.position.z), 8 * Time.deltaTime);
+                StartCoroutine("Crouching");
+            }
+        }
+
+    }
+
+
+
 }
+
+
+
+
 
 
 public class TimeScale
