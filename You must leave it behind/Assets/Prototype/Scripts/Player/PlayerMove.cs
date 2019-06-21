@@ -26,6 +26,8 @@ public class PlayerMove : MonoBehaviour
 
     public GameObject sniperNonScoped, sniperScoped;
 
+    public GameObject bulletHole;
+
     private ScriptableWeapons weaponStats;
 
     public Transform target;
@@ -115,6 +117,12 @@ public class PlayerMove : MonoBehaviour
                 {
                     expForce = 0.09f;
                     StartCoroutine("DelayExplosion", hit.point);
+                }
+
+                if (hit.transform.tag == "Wall")
+                {
+                    GameObject bullet = Instantiate(bulletHole, hit.point,hit.transform.rotation);
+                    Destroy(bullet, 30);
                 }
 
 
