@@ -105,6 +105,17 @@ public class SpiritMove : MonoBehaviour
     }
 
 
+    public void GetDamaged()
+    {
+        Health -= damageSpeed * Time.deltaTime;
+        postVol.profile = inLight;
+    }
+
+    public void ReturnToNormal()
+    {
+        postVol.profile = normal;
+    }
+
     void CheckHitLight()
     {
         GameObject[] trans = GameObject.FindGameObjectsWithTag("Light");
@@ -128,7 +139,7 @@ public class SpiritMove : MonoBehaviour
     void Update()
     {
 
-        CheckHitLight();
+        //CheckHitLight();
 
         moving = false;
         UpdateHealth();

@@ -11,6 +11,8 @@ TagManager:
   - Button
   - LightArea
   - Table
+  - Glass
+  - GlassPiece
   layers:
   - Default
   - TransparentFX

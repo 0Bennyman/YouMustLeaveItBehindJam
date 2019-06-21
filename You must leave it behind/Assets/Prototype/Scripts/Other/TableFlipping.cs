@@ -5,14 +5,20 @@ using UnityEngine;
 public class TableFlipping : MonoBehaviour
 {
 
-    public GameObject flipPoint;
+    public GameObject flipPoint,Player;
 
     public GameObject[] legs;
 
     private float rotatePoint,rotateMax;
 
+    public float dist;
+
+    public GameObject point1, point2;
+
     [HideInInspector]
     public bool lookedAt;
+
+    private bool flip1,flipped;
 
     private Outline outL;
 
@@ -44,9 +50,26 @@ public class TableFlipping : MonoBehaviour
         }
     }
 
-    public void FlipTable()
+    public void FlipTable() //Different Spirit and Player versions?
     {
-        StartCoroutine("FlippingTable",flipPoint.transform.position);
+        if (flipped)
+        {
+            return;
+        }
+
+        flipped = true;
+
+        if (Vector3.Distance(point1.transform.position, Player.transform.position) < Vector3.Distance(point2.transform.position,Player.transform.position))
+        {
+            StartCoroutine("FlippingTable", point2.transform.position);
+        }
+        else
+        {
+
+            StartCoroutine("FlippingTable", point1.transform.position);
+            flip1 = true;
+        }
+
     }
 
 
@@ -65,20 +88,52 @@ public class TableFlipping : MonoBehaviour
         if (Vector3.Distance(transform.position, point) > .1f)
         {
             transform.position = Vector3.MoveTowards(transform.position, point,12*Time.deltaTime);
-            if (transform.localEulerAngles.x < 90)
+
+            if (flip1)
             {
-                transform.Rotate(30, 0, 0);
+                if (transform.localEulerAngles.x < 90)
+                {
+                    transform.Rotate(30, 0, 0);
+                }
+
             }
+            else
+            {
+                float angle = transform.localEulerAngles.x;
+                angle = (angle > 180) ? angle - 360 : angle;
+
+                if (angle > -89)
+                {
+                    transform.Rotate(-30, 0, 0);
+                }
+            }
+
+
 
             StartCoroutine("FlippingTable", point);
         }
         else
         {
-            if (transform.localEulerAngles.x < 90)
+            if (flip1)
             {
-                float difference = 90 - transform.localEulerAngles.x;
-                transform.Rotate(difference, 0, 0);
+                if (transform.localEulerAngles.x < 90)
+                {
+                    float difference = 90 - transform.localEulerAngles.x;
+                    transform.Rotate(difference, 0, 0);
+                }
             }
+            else
+            {
+                float angle = transform.localEulerAngles.x;
+                angle = (angle > 180) ? angle - 360 : angle;
+
+                if (angle > -90)
+                {
+                    float difference = -90 + angle;
+                    transform.Rotate(difference, 0, 0);
+                }
+            }
+
 
             foreach (GameObject l in legs)
             {

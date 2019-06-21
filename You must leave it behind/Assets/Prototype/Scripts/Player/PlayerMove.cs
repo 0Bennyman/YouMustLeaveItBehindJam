@@ -7,7 +7,12 @@ public class PlayerMove : MonoBehaviour
 
     public float moveSpeed;
 
-    private float jumpCount=0,maxJumps=2;
+    public int maxHealth, curHealth;
+
+
+    private float jumpCount=0,maxJumps=2,expForce;
+
+
 
     private float rot;
 
@@ -15,15 +20,19 @@ public class PlayerMove : MonoBehaviour
     public CharacterController controller;
     public GameObject playerModel,crouchCamera;
 
-    public GameObject myCamera;
+    public BoxCollider flashLightBox;
+
+    public GameObject myCamera,gunModel,startingWeapon;
+
+    private ScriptableWeapons weaponStats;
 
     public Transform target;
     public Transform pivot;
 
-    private bool doubleJump,shouldCrouch;
+    private bool doubleJump,shouldCrouch,hasGun=false;
 
     public bool lockMovement = true;
-    public bool isPlayer;
+    public bool isPlayer,hasFlashLight;
 
     public Vector3 moveDirection;
     public float gravityScale, yAdjust;
@@ -33,6 +42,7 @@ public class PlayerMove : MonoBehaviour
     public SpiritSwitch switchSpirit;
 
     private EnemyAI ai;
+    private AnimationRecorder animRec;
 
     public GameObject eye1, eye2;
 
@@ -40,24 +50,81 @@ public class PlayerMove : MonoBehaviour
 
     void Start()
     {
+        if (startingWeapon!=null)
+        {
+            PickupGun(startingWeapon);
+        }
+
         if (isPlayer)
         {
             lockMovement = false;
         }
 
         ai = gameObject.GetComponent<EnemyAI>();
+        animRec = gameObject.GetComponent<AnimationRecorder>();
 
+        curHealth = maxHealth;
 
     }
 
     void Update()
     {
+        FireGun();
         PressButton();
         CheckButtonPress();
         CheckCrouch();
         MovePlayer();
     }
 
+
+
+    public void FireGun()
+    {
+        if (!hasGun)
+        {
+            return;
+        }
+
+        Ray ray = myCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            {
+
+                if (hit.transform.tag == "Enemy")
+                {
+                    hit.transform.GetComponent<PlayerMove>().curHealth -= 1;
+                    animRec.personDamage = hit.transform.gameObject;
+                }
+
+                if (hit.transform.tag == "Glass")
+                {
+                    Vector3 pos = hit.point;
+                    StartCoroutine("DelayExplosion", pos);
+                    expForce = 0.34f;
+                    hit.transform.GetComponent<WallDestruction>().ohfuckimhit();
+                }
+
+                if (hit.transform.tag == "GlassPiece")
+                {
+                    expForce = 0.09f;
+                    StartCoroutine("DelayExplosion", hit.point);
+                }
+
+
+            }
+        }
+
+ 
+
+    }
+
+    public void PickupGun(GameObject gun)
+    {
+        weaponStats = gun.GetComponent<WeaponStats>().weapon;
+        hasGun = true;
+        Destroy(gun);
+    }
 
     void CheckCrouch()
     {
@@ -99,6 +166,11 @@ public class PlayerMove : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     hit.transform.gameObject.GetComponent<ButtonScript>().ActivateButton();
+                    if (!isPlayer)
+                    {
+                        animRec.buttonPressed = hit.transform.gameObject;
+                    }
+
                 }
 
                 hit.transform.gameObject.GetComponent<ButtonScript>().DisplayText();
@@ -159,7 +231,14 @@ public class PlayerMove : MonoBehaviour
             moveDirection = (transform.forward * Input.GetAxis("Vertical")) + (transform.right * Input.GetAxis("Horizontal"));
             moveDirection = moveDirection.normalized * moveSpeed;
             moveDirection.y = yStore;
+
+            if (hasFlashLight && flashLightBox.enabled)
+            {
+                flashLightBox.enabled = false;
+            }
+
         }
+
 
 
         if (controller.isGrounded)
@@ -214,6 +293,26 @@ public class PlayerMove : MonoBehaviour
                 myCamera.transform.position = Vector3.MoveTowards(myCamera.transform.position, new Vector3(myCamera.transform.position.x, normalCameraPos.y+.1f, myCamera.transform.position.z), 8 * Time.deltaTime);
                 StartCoroutine("Crouching");
             }
+        }
+
+    }
+
+
+
+    IEnumerator DelayExplosion(Vector3 pos)
+    {
+        yield return new WaitForSeconds(.1f);
+
+        Vector3 explosionPos = pos;
+        Collider[] colliders = Physics.OverlapSphere(explosionPos, expForce);
+        foreach (Collider hit in colliders)
+        {
+            Rigidbody rb = hit.GetComponent<Rigidbody>();
+
+            if (rb != null)
+                //rb.AddRelativeForce(Vector3.forward * 800);
+                rb.AddExplosionForce(10000, explosionPos, 500, 0f);
+
         }
 
     }

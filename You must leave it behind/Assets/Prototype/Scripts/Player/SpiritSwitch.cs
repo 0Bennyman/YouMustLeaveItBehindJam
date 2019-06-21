@@ -76,9 +76,13 @@ public class SpiritSwitch : MonoBehaviour
 
             foreach (AnimationRecorder anim in allRecorders)
             {
-                anim.ShouldRecord = false;
-                anim.shouldPlay = true;
-                anim.PlayRecording();
+                if (anim != null)
+                {
+                    anim.ShouldRecord = false;
+                    anim.shouldPlay = true;
+                    anim.PlayRecording();
+                }
+
             }
 
             StopCoroutine("countTimer");
@@ -89,6 +93,8 @@ public class SpiritSwitch : MonoBehaviour
 
             //Spirit.transform.position = new Vector3(999, 999, 999);
             //Spirit.transform.position = new Vector3(0, 0, 999);
+
+            Spirit.GetComponent<BoxCollider>().enabled = false;
 
             Spirit.transform.position = Player.transform.position;
 
@@ -121,6 +127,8 @@ public class SpiritSwitch : MonoBehaviour
 
             //Spirit.transform.position = new Vector3(999, 999, 999);
 
+            Spirit.GetComponent<BoxCollider>().enabled = false;
+
             StartCoroutine("FadeIn");
 
         }
@@ -139,8 +147,16 @@ public class SpiritSwitch : MonoBehaviour
         moveSpirit.vulnrable = true;
         curSpirit = true;
 
+        Spirit.GetComponent<BoxCollider>().enabled = true;
 
         PlayerMove aiP = body.GetComponent<PlayerMove>();
+
+        if (aiP.hasFlashLight)
+        {
+            aiP.flashLightBox.enabled = true;
+        }
+
+
         aiP.enabled = false;
         if (aiP.eye1 != null)
         {

@@ -10,6 +10,10 @@ public class AnimationRecorder : MonoBehaviour
     public Vector3[] pos;
     public Quaternion[] myRot;
     public float[] spd;
+    public GameObject[] buttonsToPress,peopleToDamage;
+
+    [HideInInspector]
+    public GameObject buttonPressed,personDamage;
 
     public bool[] objActive;
 
@@ -27,8 +31,16 @@ public class AnimationRecorder : MonoBehaviour
         myRot = new Quaternion[pos.Length];
         spd = new float[pos.Length];
         objActive = new bool[pos.Length];
+        buttonsToPress = new GameObject[pos.Length];
+        peopleToDamage = new GameObject[pos.Length];
 
         StartCoroutine("Recording");
+    }
+
+    public void StopPlaying()
+    {
+        StopCoroutine("PlayingRecording");
+        StopCoroutine("ContinuePlaying");
     }
 
     public void PlayRecording()
@@ -86,6 +98,10 @@ public class AnimationRecorder : MonoBehaviour
             pos[curPoint] = gameObject.transform.position;
             spd[curPoint] = GetSpeed(speed);
             myRot[curPoint] = gameObject.transform.rotation;
+            buttonsToPress[curPoint] = buttonPressed;
+            peopleToDamage[curPoint] = personDamage;
+            buttonPressed = null;
+            personDamage = null;
 
             if (isButton)
             {
@@ -102,10 +118,16 @@ public class AnimationRecorder : MonoBehaviour
             pos[curPoint] = gameObject.transform.position;
             spd[curPoint] = GetSpeed(speed);
             myRot[curPoint] = gameObject.transform.rotation;
+            buttonsToPress[curPoint] = buttonPressed;
+            peopleToDamage[curPoint] = personDamage;
+            buttonPressed = null;
+            personDamage = null;
+
+
 
             if (isButton)
             {
-                objActive[curPoint] = additionalObject.activeSelf;
+                //objActive[curPoint] = additionalObject.activeSelf;
             }
 
         }
@@ -141,12 +163,26 @@ public class AnimationRecorder : MonoBehaviour
         {
             if (shouldPlay && pos[curPoint] != new Vector3(0,0,0))
             {
-                transform.position = Vector3.MoveTowards(transform.position, pos[curPoint], speed * Time.deltaTime);
-                transform.rotation = myRot[curPoint];
 
                 if (isButton)
                 {
-                    additionalObject.SetActive(objActive[curPoint]);
+                    additionalObject.SetActive(objActive[0]);
+                    yield break;
+                }
+
+                transform.position = Vector3.MoveTowards(transform.position, pos[curPoint], speed * Time.deltaTime);
+                transform.rotation = myRot[curPoint];
+
+                if (peopleToDamage[curPoint] != null && peopleToDamage[curPoint].activeInHierarchy)
+                {
+                    peopleToDamage[curPoint].GetComponent<PlayerMove>().curHealth -= 1;
+                    peopleToDamage[curPoint] = null;
+                }
+
+                if (buttonsToPress[curPoint] != null)
+                {
+                    buttonsToPress[curPoint].GetComponent<ButtonScript>().ActivateButton();
+                    buttonsToPress[curPoint] = null;
                 }
 
                 StartCoroutine("ContinuePlaying");
