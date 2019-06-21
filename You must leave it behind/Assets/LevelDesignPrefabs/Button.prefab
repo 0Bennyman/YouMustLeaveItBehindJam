@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 784107273600946244}
   m_LocalRotation: {x: -0, y: -0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -5.512, y: 0.87, z: 20.404}
+  m_LocalPosition: {x: -4.343096, y: -0.39434373, z: 12.56259}
   m_LocalScale: {x: 0.43595, y: 0.43595, z: 0.19739817}
   m_Children:
   - {fileID: 1514629174994667253}
@@ -113,6 +113,10 @@ MonoBehaviour:
   pos: []
   myRot: []
   spd: []
+  buttonsToPress: []
+  peopleToDamage: []
+  buttonPressed: {fileID: 0}
+  personDamage: {fileID: 0}
   objActive: 
   additionalObject: {fileID: 0}
   maxRecords: 300
@@ -129,6 +133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 0}
+  myText: {fileID: 6612478172629432044}
 --- !u!1 &6612478172629432044
 GameObject:
   m_ObjectHideFlags: 0

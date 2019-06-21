@@ -24,12 +24,14 @@ public class PlayerMove : MonoBehaviour
 
     public GameObject myCamera,gunModel,startingWeapon;
 
+    public GameObject sniperNonScoped, sniperScoped;
+
     private ScriptableWeapons weaponStats;
 
     public Transform target;
     public Transform pivot;
 
-    private bool doubleJump,shouldCrouch,hasGun=false;
+    private bool doubleJump,shouldCrouch,hasGun;
 
     public bool lockMovement = true;
     public bool isPlayer,hasFlashLight;
@@ -94,7 +96,11 @@ public class PlayerMove : MonoBehaviour
                 if (hit.transform.tag == "Enemy")
                 {
                     hit.transform.GetComponent<PlayerMove>().curHealth -= 1;
-                    animRec.personDamage = hit.transform.gameObject;
+                    if (!isPlayer)
+                    {
+                        animRec.personDamage = hit.transform.gameObject;
+                    }
+
                 }
 
                 if (hit.transform.tag == "Glass")
@@ -113,9 +119,18 @@ public class PlayerMove : MonoBehaviour
 
 
             }
+
+
+
         }
 
- 
+        if (Input.GetKeyDown(KeyCode.Mouse1) && weaponStats.Scope)
+        {
+            sniperScoped.SetActive(!sniperScoped.activeSelf);
+            sniperNonScoped.SetActive(!sniperNonScoped.activeSelf);
+        }
+
+
 
     }
 
