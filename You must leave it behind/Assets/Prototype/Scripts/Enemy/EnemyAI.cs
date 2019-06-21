@@ -16,8 +16,10 @@ public class EnemyAI : MonoBehaviour
 
     private Vector3 nonPatrolPoint, nonPatrolPointAlerted; //These will get the first array point of patrol points above
                                                            //These will not patrol but instead just stand and wait
+    [HideInInspector]
+    public NavMeshAgent agent;
 
-    private NavMeshAgent agent;
+    private bool alerted,chasePlayer;
     
     
 
@@ -48,7 +50,55 @@ public class EnemyAI : MonoBehaviour
 
         transform.position = PatrolPointsStandard[0];
         curPoint = 1;
-        agent.SetDestination(PatrolPointsStandard[curPoint]);
+        StartPatrol();
+    }
+
+
+    private void Update()
+    {
+        if (!alerted && !chasePlayer)
+        {
+            if (Vector3.Distance(transform.position, PatrolPointsStandard[curPoint]) < .3)
+            {
+                NextPoint();
+            }
+        }
+
+    }
+
+
+    private void StartPatrol()
+    {
+        if (!alerted)
+        {
+            agent.SetDestination(PatrolPointsStandard[curPoint]);
+        }
+        else
+        {
+            agent.SetDestination(PatrolPointsAlerted[curPoint]);
+        }
+
+    }
+
+    private void NextPoint()
+    {
+        curPoint+=1;
+
+        if (!alerted)
+        {
+            if (curPoint >= PatrolPointsStandard.Length)
+            {
+                curPoint = 0;
+            }
+        }
+        else
+        {
+            if (curPoint >= PatrolPointsAlerted.Length)
+            {
+                curPoint = 0;
+            }
+        }
+        StartPatrol();
     }
 
     IEnumerator checkHealth()
@@ -73,7 +123,8 @@ public class EnemyAI : MonoBehaviour
         playMov.controller.enabled = true;
         eye1.SetActive(false);
         eye2.SetActive(false);
-
+        agent.isStopped = true;
+        this.enabled = false;
     }
 
     public void GetUnpossesed()

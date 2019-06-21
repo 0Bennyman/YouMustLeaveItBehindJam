@@ -171,13 +171,22 @@ public class SpiritSwitch : MonoBehaviour
         {
             foreach (AnimationRecorder anim in allRecorders)
             {
-                anim.ShouldRecord = true;
-                anim.shouldPlay = false;
-                anim.StartRecording();
+                if (anim != null)
+                {
+                    anim.ShouldRecord = true;
+                    anim.shouldPlay = false;
+                    anim.StartRecording();
+                }
+
             }
 
             timer = 0;
             StartCoroutine("countTimer");
+        }
+        else
+        {
+            body.GetComponent<EnemyAI>().enabled = true;
+            body.GetComponent<EnemyAI>().agent.isStopped = false;
         }
     }
 
