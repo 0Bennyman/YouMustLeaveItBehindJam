@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94befccdabbd954086ca5ba4f88f573, type: 3}
   m_Name: Sniper
   m_EditorClassIdentifier: 
-  Damage: 12
+  Damage: 20
   maxAmmo: 8
   fireRate: 0.5
   recoilAmount: 30

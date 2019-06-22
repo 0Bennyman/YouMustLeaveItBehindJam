@@ -21,6 +21,8 @@ public class EnemyAI : MonoBehaviour
 
     [HideInInspector]
     public bool alerted,chasePlayer;
+
+    private GameObject player;
     
     
 
@@ -45,7 +47,7 @@ public class EnemyAI : MonoBehaviour
         playMov = gameObject.GetComponent<PlayerMove>();
         playMov.enabled = false;
         agent = gameObject.GetComponent<NavMeshAgent>();
-
+        player = GameObject.FindGameObjectWithTag("Player");
 
         StartCoroutine("checkHealth");  
 
@@ -70,6 +72,11 @@ public class EnemyAI : MonoBehaviour
             {
                 NextPoint();
             }
+        }
+
+        if (chasePlayer)
+        {
+            agent.SetDestination(player.transform.position);
         }
 
     }

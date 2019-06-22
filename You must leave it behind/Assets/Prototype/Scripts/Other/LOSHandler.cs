@@ -58,8 +58,8 @@ public class LOSHandler : MonoBehaviour
             if (alertTimer >= alertMax)
             {
                 myHost.GetComponent<EnemyAI>().alerted = true;
-                //myHost.GetComponent<EnemyAI>().chasePlayer = true;
-                myHost.GetComponent<EnemyAI>().StartPatrol();
+                myHost.GetComponent<EnemyAI>().chasePlayer = true;
+                //myHost.GetComponent<EnemyAI>().StartPatrol();
             }
 
         }

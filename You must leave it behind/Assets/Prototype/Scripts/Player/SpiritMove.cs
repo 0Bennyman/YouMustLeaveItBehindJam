@@ -33,6 +33,8 @@ public class SpiritMove : MonoBehaviour
 
     public PostProcessProfile normal, inLight;
 
+    public GameObject Player;
+
     private void OnTriggerStay(Collider collision)
     {
         if (collision.tag == "Wall")
@@ -241,6 +243,13 @@ public class SpiritMove : MonoBehaviour
             Health += damageSpeed / 2 * Time.deltaTime;
             healthSlider.value = Health;
         }
+
+        if (Health <= 0)
+        {
+            switchSpirit.SwitchToPlayerBody(Player);
+            Health = maxHealth;
+        }
+
     }
 
 

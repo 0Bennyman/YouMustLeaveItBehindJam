@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Core_Game/Scenes/Confirmation_Scene.unity
+    guid: 26c32a4726065ff479ace492c9572ecc
+  - enabled: 1
+    path: Assets/Core_Game/Scenes/Main_Map_Modified.unity
+    guid: f0a69ea030b76b9408cf3d47c032ec05
   m_configObjects: {}
