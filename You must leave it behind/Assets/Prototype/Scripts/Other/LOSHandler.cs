@@ -11,6 +11,19 @@ public class LOSHandler : MonoBehaviour
 
     private bool isSpirit, isPlayer,reCheck;
 
+    public float alertIncrease,alertMax;
+
+    private float alertTimer;
+
+    public GameObject myHost;
+
+    private GameObject player;
+
+    private void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+    }
+
     private void OnTriggerStay(Collider other)
     {
 
@@ -22,6 +35,35 @@ public class LOSHandler : MonoBehaviour
             StartCoroutine("checkLOS",other.gameObject);
             StartCoroutine("boxReturn",other.gameObject);
         }
+
+        if (other.tag=="Player" && enemyLOS)
+        {
+            RaycastHit hit;
+
+            if (Physics.Raycast(transform.position, (player.transform.position - transform.position), out hit, Mathf.Infinity))
+            {
+                if (hit.transform.tag == "Player")
+                {
+                    alertTimer += alertIncrease * Time.deltaTime;
+                }
+                else
+                {
+                    if (alertTimer > 0)
+                    {
+                        alertTimer -= alertIncrease * Time.deltaTime;
+                    }
+                }
+            }
+
+            if (alertTimer >= alertMax)
+            {
+                myHost.GetComponent<EnemyAI>().alerted = true;
+                //myHost.GetComponent<EnemyAI>().chasePlayer = true;
+                myHost.GetComponent<EnemyAI>().StartPatrol();
+            }
+
+        }
+
     }
 
     private void OnTriggerExit(Collider other)

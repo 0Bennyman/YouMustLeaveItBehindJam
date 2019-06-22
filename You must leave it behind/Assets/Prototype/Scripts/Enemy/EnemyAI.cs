@@ -19,7 +19,8 @@ public class EnemyAI : MonoBehaviour
     [HideInInspector]
     public NavMeshAgent agent;
 
-    private bool alerted,chasePlayer;
+    [HideInInspector]
+    public bool alerted,chasePlayer;
     
     
 
@@ -63,11 +64,18 @@ public class EnemyAI : MonoBehaviour
                 NextPoint();
             }
         }
+        else if (alerted && !chasePlayer)
+        {
+            if (Vector3.Distance(transform.position, PatrolPointsAlerted[curPoint]) < .3)
+            {
+                NextPoint();
+            }
+        }
 
     }
 
 
-    private void StartPatrol()
+    public void StartPatrol()
     {
         if (!alerted)
         {
