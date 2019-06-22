@@ -15,7 +15,7 @@ public class WallDestruction : MonoBehaviour
 
     public void ohfuckimhit()
     {
-        Instantiate(wallPrefab, transform.position, transform.rotation);
+        Instantiate(wallPrefab, transform.position,wallPrefab.transform.rotation);
         Destroy(gameObject);
     }
 
