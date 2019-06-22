@@ -12,10 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94befccdabbd954086ca5ba4f88f573, type: 3}
   m_Name: Sniper
   m_EditorClassIdentifier: 
-  Damage: 8
-  maxAmmo: 0
+  Damage: 12
+  maxAmmo: 8
   fireRate: 0.5
+  recoilAmount: 30
   throwablePrefab: {fileID: 0}
+  prefabModel: {fileID: 2513167468605297652, guid: 137da81d6bb5f7b4ea1e1388ac2ae800,
+    type: 3}
+  prefabModelScoped: {fileID: 11402094466181317, guid: aee45c232fae728478faed9417dfe9ce,
+    type: 3}
   Model: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
   Scope: 1
   canBeThrown: 0

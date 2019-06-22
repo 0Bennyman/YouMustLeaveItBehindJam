@@ -12,8 +12,6 @@ public class PlayerMove : MonoBehaviour
 
     private float jumpCount=0,maxJumps=2,expForce;
 
-
-
     private float rot;
 
     public float jumpForce;
@@ -35,6 +33,10 @@ public class PlayerMove : MonoBehaviour
 
     private bool doubleJump,shouldCrouch,hasGun;
 
+    private float crouchCur;
+
+    public float crouchMin;
+
     public bool lockMovement = true;
     public bool isPlayer,hasFlashLight;
 
@@ -52,6 +54,10 @@ public class PlayerMove : MonoBehaviour
 
     private RaycastHit hit;
 
+    private PlayerLook playLook;
+
+    private float curFireRate,curAmmo;
+
     void Start()
     {
         if (startingWeapon!=null)
@@ -66,6 +72,8 @@ public class PlayerMove : MonoBehaviour
 
         ai = gameObject.GetComponent<EnemyAI>();
         animRec = gameObject.GetComponent<AnimationRecorder>();
+        playLook = myCamera.GetComponent<PlayerLook>();
+        //normalCameraPos = myCamera.transform.position;
 
         curHealth = maxHealth;
 
@@ -84,20 +92,47 @@ public class PlayerMove : MonoBehaviour
 
     public void FireGun()
     {
-        if (!hasGun)
+        if (!hasGun || lockMovement)
         {
             return;
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.Mouse1) && weaponStats.Scope)
+        {
+            sniperScoped.SetActive(!sniperScoped.activeSelf);
+            sniperNonScoped.SetActive(!sniperNonScoped.activeSelf);
+        }
+
+
+        if (curFireRate > 0)
+        {
+            curFireRate -= weaponStats.fireRate*Time.deltaTime;
+            return;
+        }
+
+        if (curAmmo <= 0)
+        {
+            //Reload
+            curAmmo = weaponStats.maxAmmo;
+            curFireRate = 2;
         }
 
         Ray ray = myCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
+            playLook.Recoil(weaponStats.recoilAmount);
+
+            curFireRate = 1;
+            curAmmo -= 1;
+
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
 
                 if (hit.transform.tag == "Enemy")
                 {
-                    hit.transform.GetComponent<PlayerMove>().curHealth -= 1;
+                    hit.transform.GetComponent<PlayerMove>().curHealth -= weaponStats.Damage;
+                    
                     if (!isPlayer)
                     {
                         animRec.personDamage = hit.transform.gameObject;
@@ -132,11 +167,6 @@ public class PlayerMove : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse1) && weaponStats.Scope)
-        {
-            sniperScoped.SetActive(!sniperScoped.activeSelf);
-            sniperNonScoped.SetActive(!sniperNonScoped.activeSelf);
-        }
 
 
 
@@ -146,23 +176,34 @@ public class PlayerMove : MonoBehaviour
     {
         weaponStats = gun.GetComponent<WeaponStats>().weapon;
         hasGun = true;
+        GameObject scope = Instantiate(weaponStats.prefabModelScoped, transform.position, transform.rotation, myCamera.transform);
+        GameObject nonScope = Instantiate(weaponStats.prefabModel, transform.position, transform.rotation, myCamera.transform);
+        scope.transform.position = sniperScoped.transform.position;
+        scope.transform.rotation = sniperScoped.transform.rotation;
+        sniperScoped = scope;
+        nonScope.transform.position = sniperNonScoped.transform.position;
+        nonScope.transform.rotation = sniperNonScoped.transform.rotation;
+        sniperNonScoped = nonScope;
+        //sniperScoped = weaponStats.prefabModelScoped;
         Destroy(gun);
     }
 
     void CheckCrouch()
     {
+        normalCameraPos = transform.position;
+
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             shouldCrouch = !shouldCrouch;
-
-            //Temporary! Should be an animation with the player model!
-
-            crouchCameraPos = crouchCamera.transform.position;
-            normalCameraPos = transform.position;
+            crouchCur = 0;
 
             StopCoroutine("Crouching");
+
             StartCoroutine("Crouching");
+
+
+
         }
 
 
@@ -233,6 +274,7 @@ public class PlayerMove : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
+            switchSpirit.Spirit.GetComponent<BoxCollider>().enabled = false;
             lockMovement = true;
             myCamera.SetActive(false);
             switchSpirit.SwitchToSpiritForm(gameObject,myCamera);
@@ -301,22 +343,36 @@ public class PlayerMove : MonoBehaviour
     IEnumerator Crouching()
     {
         yield return new WaitForSeconds(.01f);
+
         if (shouldCrouch)
         {
-            if (Vector3.Distance(myCamera.transform.position, crouchCameraPos) > .1f)
-            {
-                myCamera.transform.position = Vector3.MoveTowards(myCamera.transform.position, new Vector3(myCamera.transform.position.x,crouchCameraPos.y, myCamera.transform.position.z), 8 * Time.deltaTime);
-                StartCoroutine("Crouching");
-            }
+            crouchCur -= 2 * Time.deltaTime;
+
         }
         else
         {
-            if (Vector3.Distance(myCamera.transform.position, normalCameraPos) > .1f)
-            {
-                myCamera.transform.position = Vector3.MoveTowards(myCamera.transform.position, new Vector3(myCamera.transform.position.x, normalCameraPos.y+.1f, myCamera.transform.position.z), 8 * Time.deltaTime);
-                StartCoroutine("Crouching");
-            }
+            crouchCur += 1 * Time.deltaTime;
         }
+
+        print(shouldCrouch);
+
+        myCamera.transform.position = Vector3.MoveTowards(myCamera.transform.position, new Vector3(myCamera.transform.position.x, normalCameraPos.y+crouchCur, myCamera.transform.position.z), 8 * Time.deltaTime);
+
+
+
+        if (shouldCrouch && crouchCur <= crouchMin)
+        {
+            myCamera.transform.position = Vector3.MoveTowards(myCamera.transform.position, new Vector3(myCamera.transform.position.x, normalCameraPos.y + crouchMin, myCamera.transform.position.z), 8 * Time.deltaTime);
+        }
+        else if (!shouldCrouch && crouchCur >= .1)
+        {
+            myCamera.transform.position = Vector3.MoveTowards(myCamera.transform.position, new Vector3(myCamera.transform.position.x, normalCameraPos.y, myCamera.transform.position.z), 8 * Time.deltaTime);
+        }
+        else
+        {
+            StartCoroutine("Crouching");
+        }
+
 
     }
 

@@ -12,10 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94befccdabbd954086ca5ba4f88f573, type: 3}
   m_Name: Pistol
   m_EditorClassIdentifier: 
-  Damage: 5
-  maxAmmo: 0
-  fireRate: 0.5
+  Damage: 2
+  maxAmmo: 15
+  fireRate: 20
+  recoilAmount: 1
   throwablePrefab: {fileID: 0}
+  prefabModel: {fileID: 8029208269884863826, guid: acab64156d77cfa49a27cb57940db871,
+    type: 3}
+  prefabModelScoped: {fileID: 8029208269884863826, guid: acab64156d77cfa49a27cb57940db871,
+    type: 3}
   Model: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
-  Scope: 0
+  Scope: 1
   canBeThrown: 0

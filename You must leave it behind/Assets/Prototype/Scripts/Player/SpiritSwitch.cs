@@ -32,6 +32,7 @@ public class SpiritSwitch : MonoBehaviour
         animRecord = gameObject.GetComponent<AnimationRecorder>();
         curBody = Player;
         curCamera = pCamera;
+        Spirit.GetComponent<BoxCollider>().enabled = false;
 
         SwitchToPlayerBody(Player);
 
@@ -51,6 +52,7 @@ public class SpiritSwitch : MonoBehaviour
 
     public void SwitchToPlayerBodyFinal(GameObject bodyToSwitch)
     {
+        Spirit.GetComponent<BoxCollider>().enabled = false;
 
         if (bodyToSwitch == Player)
         {
@@ -105,6 +107,7 @@ public class SpiritSwitch : MonoBehaviour
         }
         else
         {
+
             moveSpirit.speed = 0;
             sCamera.SetActive(false);
             moveSpirit.enabled = false;
@@ -137,6 +140,8 @@ public class SpiritSwitch : MonoBehaviour
 
     public void SwitchToSpiritForm(GameObject body,GameObject bodyCamera)
     {
+        Spirit.GetComponent<BoxCollider>().enabled = false;
+
         Spirit.transform.position = body.transform.position;
         sCamera.transform.rotation = bodyCamera.transform.rotation;
         bodyCamera.SetActive(false);
@@ -226,6 +231,11 @@ public class SpiritSwitch : MonoBehaviour
             fade.color = new Color(fade.color.r, fade.color.g, fade.color.b, fade.color.a - .8f * Time.deltaTime);
             StartCoroutine("FadeIn");
         }
+        else
+        {
+            Spirit.GetComponent<BoxCollider>().enabled = true;
+        }
+
 
     }
 

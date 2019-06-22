@@ -103,7 +103,7 @@ public class EnemyAI : MonoBehaviour
 
     IEnumerator checkHealth()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(.3f);
 
         if (playMov.curHealth<= 0)
         {
