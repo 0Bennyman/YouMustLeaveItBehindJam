@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 public class EnemyAI : MonoBehaviour
 {
     public GameObject controlledCamera;
@@ -21,7 +22,6 @@ public class EnemyAI : MonoBehaviour
     public bool alerted,chasePlayer;
 
     private GameObject player;
-
 
     public bool isFiring;
     

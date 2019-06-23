@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerMove : MonoBehaviour
 {
 
@@ -58,6 +58,8 @@ public class PlayerMove : MonoBehaviour
 
     private PlayerLook playLook;
 
+    public Image damageIndicator;
+
     private float curFireRate,curAmmo;
 
     void Start()
@@ -92,7 +94,9 @@ public class PlayerMove : MonoBehaviour
     public void GetHurt()
     {
         curHealth -= 1;
-        //Red Hurt Fade
+        damageIndicator.color = new Color(damageIndicator.color.r, damageIndicator.color.g, damageIndicator.color.b, 0.3f);
+        StopCoroutine("FadeDamage");
+        StartCoroutine("FadeDamage",0.3f);
     }
 
 
@@ -427,7 +431,18 @@ public class PlayerMove : MonoBehaviour
     }
 
 
+    IEnumerator FadeDamage(float alpha)
+    {
+        yield return new WaitForSeconds(.01f);
 
+        if (damageIndicator.color.a > 0)
+        {
+            alpha -= .5f * Time.deltaTime;
+            damageIndicator.color = new Color(damageIndicator.color.r, damageIndicator.color.g, damageIndicator.color.b, alpha);
+            StartCoroutine("FadeDamage", alpha);
+        }
+
+    }
 
     IEnumerator DelayExplosion(Vector3 pos)
     {
