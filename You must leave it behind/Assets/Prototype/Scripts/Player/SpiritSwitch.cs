@@ -57,8 +57,6 @@ public class SpiritSwitch : MonoBehaviour
         if (bodyToSwitch == Player)
         {
             moveSpirit.speed = 0;
-            //Spirit.transform.position = new Vector3(999, 999, 999);
-            //Spirit.SetActive(false);
             sCamera.SetActive(false);
             moveSpirit.enabled = false;
 
@@ -89,13 +87,6 @@ public class SpiritSwitch : MonoBehaviour
 
             StopCoroutine("countTimer");
 
-            //animRecord.ShouldRecord = false;
-            //animRecord.shouldPlay = true;
-            //animRecord.PlayRecording();
-
-            //Spirit.transform.position = new Vector3(999, 999, 999);
-            //Spirit.transform.position = new Vector3(0, 0, 999);
-
             Spirit.GetComponent<BoxCollider>().enabled = false;
 
             Spirit.transform.position = Player.transform.position;
@@ -112,9 +103,6 @@ public class SpiritSwitch : MonoBehaviour
             sCamera.SetActive(false);
             moveSpirit.enabled = false;
 
-            //Spirit.transform.position = new Vector3(999, 999, 999);
-            //Spirit.SetActive(false);
-
             EnemyAI ai = bodyToSwitch.GetComponent<EnemyAI>();
             ai.GetPossesed();
 
@@ -127,8 +115,6 @@ public class SpiritSwitch : MonoBehaviour
             dot.color = new Color(dot.color.r, dot.color.g, dot.color.b, 0.3f);
 
             fade.color = new Color(fade.color.r, fade.color.g, fade.color.b, 1);
-
-            //Spirit.transform.position = new Vector3(999, 999, 999);
 
             Spirit.GetComponent<BoxCollider>().enabled = false;
 
@@ -193,12 +179,6 @@ public class SpiritSwitch : MonoBehaviour
             body.GetComponent<EnemyAI>().enabled = true;
             body.GetComponent<EnemyAI>().agent.isStopped = false;
         }
-    }
-
-    public void PossessEnemy()
-    {
-        //Maybe not nessesary if we just do it in 1 void
-
     }
 
 

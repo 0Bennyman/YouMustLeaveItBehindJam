@@ -19,7 +19,7 @@ public class AnimationRecorder : MonoBehaviour
 
     public GameObject additionalObject;
 
-    public int maxRecords = 300; //Just realised we would have to do this manually ooof
+    public int maxRecords = 300; 
 
     private int curPoint;
     private float speed,speedIncrease,speedDecrease;
@@ -27,7 +27,7 @@ public class AnimationRecorder : MonoBehaviour
     public void StartRecording()
     {
         curPoint = 0;
-        pos = new Vector3[250];
+        pos = new Vector3[300];
         myRot = new Quaternion[pos.Length];
         spd = new float[pos.Length];
         objActive = new bool[pos.Length];
@@ -122,13 +122,6 @@ public class AnimationRecorder : MonoBehaviour
             peopleToDamage[curPoint] = personDamage;
             buttonPressed = null;
             personDamage = null;
-
-
-
-            if (isButton)
-            {
-                //objActive[curPoint] = additionalObject.activeSelf;
-            }
 
         }
 

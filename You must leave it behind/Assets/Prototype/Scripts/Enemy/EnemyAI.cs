@@ -14,8 +14,6 @@ public class EnemyAI : MonoBehaviour
 
     public int curPoint;
 
-    private Vector3 nonPatrolPoint, nonPatrolPointAlerted; //These will get the first array point of patrol points above
-                                                           //These will not patrol but instead just stand and wait
     [HideInInspector]
     public NavMeshAgent agent;
 
@@ -23,6 +21,9 @@ public class EnemyAI : MonoBehaviour
     public bool alerted,chasePlayer;
 
     private GameObject player;
+
+
+    public bool isFiring;
     
     
 
@@ -59,6 +60,12 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
+        if (!isFiring && chasePlayer)
+        {
+            isFiring = true;
+            StartCoroutine("ShootPlayer");
+        }
+
         if (!alerted && !chasePlayer)
         {
             agent.SetDestination(PatrolPointsStandard[curPoint]);
@@ -99,7 +106,6 @@ public class EnemyAI : MonoBehaviour
 
     private void NextPoint()
     {
-        print("next"+gameObject.name);
         curPoint+=1;
 
         if (!alerted)
@@ -130,6 +136,29 @@ public class EnemyAI : MonoBehaviour
 
         StartCoroutine("checkHealth");
 
+    }
+
+    IEnumerator ShootPlayer()
+    {
+        yield return new WaitForSeconds(.5f);
+        RaycastHit hit;
+
+        if (Physics.Raycast(controlledCamera.transform.position, (player.transform.position-controlledCamera.transform.position ),out hit))
+        {
+            if (hit.transform.tag == "Player")
+            {
+                int randomChance = Random.Range(0, 2);
+                if (randomChance == 1)
+                {
+                    player.GetComponent<PlayerMove>().GetHurt();
+                }
+            }
+
+        }
+
+
+
+        StartCoroutine("ShootPlayer");
     }
 
 

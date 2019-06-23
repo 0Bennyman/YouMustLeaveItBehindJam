@@ -75,7 +75,6 @@ public class PlayerMove : MonoBehaviour
         ai = gameObject.GetComponent<EnemyAI>();
         animRec = gameObject.GetComponent<AnimationRecorder>();
         playLook = myCamera.GetComponent<PlayerLook>();
-        //normalCameraPos = myCamera.transform.position;
 
         curHealth = maxHealth;
 
@@ -90,6 +89,11 @@ public class PlayerMove : MonoBehaviour
         MovePlayer();
     }
 
+    public void GetHurt()
+    {
+        curHealth -= 1;
+        //Red Hurt Fade
+    }
 
 
     public void FireGun()
@@ -193,7 +197,6 @@ public class PlayerMove : MonoBehaviour
         nonScope.transform.position = sniperNonScoped.transform.position;
         nonScope.transform.rotation = sniperNonScoped.transform.rotation;
         sniperNonScoped = nonScope;
-        //sniperScoped = weaponStats.prefabModelScoped;
         Destroy(gun);
     }
 
@@ -400,12 +403,9 @@ public class PlayerMove : MonoBehaviour
 
          if (Physics.Raycast(shootPos,(point - shootPos), out hit, Mathf.Infinity))
          {
-            print("Resending Ray");
-            print(hit.transform.gameObject.name);
 
             if (hit.transform.tag == "GlassPiece")
             {
-                print(hit.transform.gameObject.name);
                 Destroy(hit.transform.gameObject);
                 StartCoroutine("SendRay", point);
             }
@@ -413,7 +413,6 @@ public class PlayerMove : MonoBehaviour
             {
                 if (hit.transform.tag == "Enemy")
                 {
-                    print(hit.transform.gameObject.name);
                     hit.transform.GetComponent<PlayerMove>().curHealth -= weaponStats.Damage;
 
                     if (!isPlayer)
@@ -441,7 +440,6 @@ public class PlayerMove : MonoBehaviour
             Rigidbody rb = hit.GetComponent<Rigidbody>();
 
             if (rb != null)
-                //rb.AddRelativeForce(Vector3.forward * 800);
                 rb.AddExplosionForce(10000, explosionPos, 500, 0f);
 
         }

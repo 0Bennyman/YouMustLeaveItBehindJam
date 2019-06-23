@@ -140,9 +140,6 @@ public class SpiritMove : MonoBehaviour
 
     void Update()
     {
-
-        //CheckHitLight();
-
         moving = false;
         UpdateHealth();
         if (Input.GetKey(KeyCode.W))

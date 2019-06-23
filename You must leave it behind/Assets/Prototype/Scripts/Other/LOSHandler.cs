@@ -59,7 +59,6 @@ public class LOSHandler : MonoBehaviour
             {
                 myHost.GetComponent<EnemyAI>().alerted = true;
                 myHost.GetComponent<EnemyAI>().chasePlayer = true;
-                //myHost.GetComponent<EnemyAI>().StartPatrol();
             }
 
         }
@@ -107,16 +106,6 @@ public class LOSHandler : MonoBehaviour
     IEnumerator boxReturn(GameObject obj)
     {
         yield return new WaitForSeconds(.2f);
-
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, (obj.transform.position - transform.position), out hit, Mathf.Infinity))
-        {
-            //If we can no longer see the Spirit
-            if (hit.transform.tag != "Spirit" &&isSpirit)
-            {
-                //obj.GetComponent<SpiritMove>().ReturnToNormal();
-            }
-        }
 
 
         box.enabled = true;

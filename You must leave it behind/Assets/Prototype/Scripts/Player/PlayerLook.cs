@@ -21,16 +21,16 @@ public class PlayerLook : MonoBehaviour
 
     void Update()
     {
-        RotateCamera();       
+        RotateCamera(0);       
     }
 
-    void RotateCamera()
+    void RotateCamera(float recoil)
     {
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
         float rotAmountX = mouseX * mouseSensitivity;
-        float rotAmountY = mouseY * mouseSensitivity;
+        float rotAmountY = mouseY * mouseSensitivity+recoil;
 
         xAxisClamp -= rotAmountY;
 
@@ -61,37 +61,7 @@ public class PlayerLook : MonoBehaviour
 
     public void Recoil(float recoil)
     {
-        //transform.LookAt(recoilPoint.transform.position);
-
-        float mouseX = Input.GetAxis("Mouse X");
-        float mouseY = Input.GetAxis("Mouse Y");
-
-        float rotAmountX = mouseX * mouseSensitivity;
-        float rotAmountY = recoil;
-
-        xAxisClamp -= rotAmountY;
-
-        Vector3 targetRotCam = transform.rotation.eulerAngles;
-        Vector3 targetRotBody = playerBody.rotation.eulerAngles;
-
-        targetRotCam.x -= rotAmountY;
-        targetRotCam.z = 0;
-        targetRotBody.y += rotAmountX;
-
-
-        if (xAxisClamp > 90)
-        {
-            xAxisClamp = 90;
-            targetRotCam.x = 90;
-        }
-        else if (xAxisClamp < -70)
-        {
-            xAxisClamp = -70;
-            targetRotCam.x = 270;
-        }
-
-        transform.rotation = Quaternion.Euler(targetRotCam);
-        playerBody.rotation = Quaternion.Euler(targetRotBody);
+        RotateCamera(recoil);
     }
 
 
