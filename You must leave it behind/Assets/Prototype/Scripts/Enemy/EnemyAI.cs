@@ -61,14 +61,16 @@ public class EnemyAI : MonoBehaviour
     {
         if (!alerted && !chasePlayer)
         {
-            if (Vector3.Distance(transform.position, PatrolPointsStandard[curPoint]) < .3)
+            agent.SetDestination(PatrolPointsStandard[curPoint]);
+            if (Vector3.Distance(transform.position, PatrolPointsStandard[curPoint]) < .6)
             {
                 NextPoint();
             }
         }
         else if (alerted && !chasePlayer)
         {
-            if (Vector3.Distance(transform.position, PatrolPointsAlerted[curPoint]) < .3)
+            agent.SetDestination(PatrolPointsAlerted[curPoint]);
+            if (Vector3.Distance(transform.position, PatrolPointsAlerted[curPoint]) < .6)
             {
                 NextPoint();
             }
@@ -97,6 +99,7 @@ public class EnemyAI : MonoBehaviour
 
     private void NextPoint()
     {
+        print("next"+gameObject.name);
         curPoint+=1;
 
         if (!alerted)

@@ -7,7 +7,7 @@ public class ScriptableWeapons : ScriptableObject
 {
 
     public int Damage,maxAmmo;
-    public float fireRate,recoilAmount;
+    public float fireRate,recoilAmount,noiseRadius;
 
     public GameObject throwablePrefab,prefabModel,prefabModelScoped;
 

@@ -130,6 +130,8 @@ public class PlayerMove : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
+                NoiseBubble(transform.position);
+                NoiseBubble(hit.point);
 
                 if (hit.transform.tag == "Enemy")
                 {
@@ -215,10 +217,6 @@ public class PlayerMove : MonoBehaviour
 
 
     }
-
-
-
-
 
     void PressButton()
     {
@@ -346,6 +344,19 @@ public class PlayerMove : MonoBehaviour
 
     }
 
+    void NoiseBubble(Vector3 pos)
+    {
+        Collider[] colliders = Physics.OverlapSphere(pos,weaponStats.noiseRadius);
+        foreach (Collider hit in colliders)
+        {
+            ai = hit.GetComponent<EnemyAI>();
+            if (ai != null)
+            {
+                ai.alerted = true;
+                ai.StartPatrol();
+            }
+        }
+    }
 
     IEnumerator Crouching()
     {
@@ -415,6 +426,9 @@ public class PlayerMove : MonoBehaviour
          }
 
     }
+
+
+
 
     IEnumerator DelayExplosion(Vector3 pos)
     {

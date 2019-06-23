@@ -16,6 +16,7 @@ MonoBehaviour:
   maxAmmo: 8
   fireRate: 0.5
   recoilAmount: 30
+  noiseRadius: 20
   throwablePrefab: {fileID: 0}
   prefabModel: {fileID: 2513167468605297652, guid: 137da81d6bb5f7b4ea1e1388ac2ae800,
     type: 3}
