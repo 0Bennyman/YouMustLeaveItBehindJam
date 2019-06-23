@@ -272,6 +272,17 @@ public class PlayerMove : MonoBehaviour
                 }
             }
 
+            if (hit.transform.tag == "Weapon")
+            {
+                hit.transform.GetComponent<WeaponStats>().lookedAt = true;
+                hit.transform.GetComponent<WeaponStats>().DisplayHighlight();
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    PickupGun(hit.transform.gameObject);
+                }
+            }
+
 
         }
 
