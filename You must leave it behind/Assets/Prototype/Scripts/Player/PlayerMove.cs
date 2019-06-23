@@ -97,7 +97,7 @@ public class PlayerMove : MonoBehaviour
     {
         if (curHealth <= 0 && isPlayer)
         {
-            SceneManager.LoadScene(1);//GET THIS SCENE
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
@@ -151,7 +151,7 @@ public class PlayerMove : MonoBehaviour
                 NoiseBubble(transform.position);
                 NoiseBubble(hit.point);
 
-                if (hit.transform.tag == "Enemy")
+                if (hit.transform.tag == "Enemy" || hit.transform.tag == "EnemyEnforcer")
                 {
                     hit.transform.GetComponent<PlayerMove>().curHealth -= weaponStats.Damage;
                     
