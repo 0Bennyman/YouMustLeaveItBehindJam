@@ -31,6 +31,8 @@ public class PlayerMove : MonoBehaviour
     public Transform target;
     public Transform pivot;
 
+    private Vector3 shootPos;
+
     private bool doubleJump,shouldCrouch,hasGun;
 
     private float crouchCur;
@@ -146,6 +148,11 @@ public class PlayerMove : MonoBehaviour
                     StartCoroutine("DelayExplosion", pos);
                     expForce = 0.34f;
                     hit.transform.GetComponent<WallDestruction>().ohfuckimhit();
+
+                    //Now we gott re-send a ray through this glass
+                    shootPos = myCamera.transform.position;
+                    StartCoroutine("SendRay",hit.point);
+
                 }
 
                 if (hit.transform.tag == "GlassPiece")
@@ -376,7 +383,38 @@ public class PlayerMove : MonoBehaviour
 
     }
 
+    IEnumerator SendRay(Vector3 point)
+    {
+        yield return new WaitForSeconds(.1f);
 
+         if (Physics.Raycast(shootPos,(point - shootPos), out hit, Mathf.Infinity))
+         {
+            print("Resending Ray");
+            print(hit.transform.gameObject.name);
+
+            if (hit.transform.tag == "GlassPiece")
+            {
+                print(hit.transform.gameObject.name);
+                Destroy(hit.transform.gameObject);
+                StartCoroutine("SendRay", point);
+            }
+            else
+            {
+                if (hit.transform.tag == "Enemy")
+                {
+                    print(hit.transform.gameObject.name);
+                    hit.transform.GetComponent<PlayerMove>().curHealth -= weaponStats.Damage;
+
+                    if (!isPlayer)
+                    {
+                        animRec.personDamage = hit.transform.gameObject;
+                    }
+
+                }
+            }
+         }
+
+    }
 
     IEnumerator DelayExplosion(Vector3 pos)
     {
