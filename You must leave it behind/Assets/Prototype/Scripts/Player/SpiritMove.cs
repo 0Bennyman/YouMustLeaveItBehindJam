@@ -35,10 +35,14 @@ public class SpiritMove : MonoBehaviour
 
     public GameObject Player;
 
-    private void OnTriggerStay(Collider collision)
+    private BoxCollider box;
+    private void OnCollisionStay(Collision collision)
     {
-        if (collision.tag == "Wall")
+        if (collision.transform.tag == "Wall")
         {
+            box.enabled = false;
+            StartCoroutine("resetBox");
+
             if (speed > 0)
             {
                 speed = 3.5f;
@@ -51,9 +55,9 @@ public class SpiritMove : MonoBehaviour
             }
         }
 
-        if (collision.tag == "LightArea")
+        if (collision.transform.tag == "LightArea")
         {
-            GameObject light = collision.GetComponent<LightChild>().light;
+            GameObject light = collision.transform.GetComponent<LightChild>().light;
             collision.gameObject.SetActive(false);
             if (Physics.Raycast(transform.position, (light.transform.position - transform.position), out hit, Mathf.Infinity))
             {
@@ -84,7 +88,7 @@ public class SpiritMove : MonoBehaviour
     {
         healthSlider.maxValue = maxHealth;
         healthSlider.value = Health;
-
+        box = gameObject.GetComponent<BoxCollider>();
         postVol = cam.GetComponent<PostProcessVolume>();
     }
 
@@ -249,5 +253,10 @@ public class SpiritMove : MonoBehaviour
 
     }
 
+    IEnumerator resetBox()
+    {
+        yield return new WaitForSeconds(.5f);
+        box.enabled = true;
+    }
 
 }
