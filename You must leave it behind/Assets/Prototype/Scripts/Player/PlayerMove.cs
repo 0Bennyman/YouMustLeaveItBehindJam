@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class PlayerMove : MonoBehaviour
 {
 
@@ -84,11 +85,20 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
+        CheckPlayerHealth();
         FireGun();
         PressButton();
         CheckButtonPress();
         CheckCrouch();
         MovePlayer();
+    }
+
+    void CheckPlayerHealth()
+    {
+        if (curHealth <= 0 && isPlayer)
+        {
+            SceneManager.LoadScene(1);//GET THIS SCENE
+        }
     }
 
     public void GetHurt()
