@@ -15,6 +15,7 @@ TagManager:
   - GlassPiece
   - Weapon
   - EnemyEnforcer
+  - EnemyBoss
   layers:
   - Default
   - TransparentFX

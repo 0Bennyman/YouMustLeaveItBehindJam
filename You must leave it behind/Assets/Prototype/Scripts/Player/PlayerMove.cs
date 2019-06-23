@@ -135,7 +135,8 @@ public class PlayerMove : MonoBehaviour
         {
             //Reload
             curAmmo = weaponStats.maxAmmo;
-            curFireRate = 2;
+           // curFireRate = 2;
+           //Removing Reload due to lack of animations
         }
 
         Ray ray = myCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
@@ -151,7 +152,7 @@ public class PlayerMove : MonoBehaviour
                 NoiseBubble(transform.position);
                 NoiseBubble(hit.point);
 
-                if (hit.transform.tag == "Enemy" || hit.transform.tag == "EnemyEnforcer")
+                if (hit.transform.tag == "Enemy" || hit.transform.tag == "EnemyEnforcer" || hit.transform.tag == "EnemyBoss")
                 {
                     hit.transform.GetComponent<PlayerMove>().curHealth -= weaponStats.Damage;
                     
@@ -424,7 +425,7 @@ public class PlayerMove : MonoBehaviour
 
     IEnumerator SendRay(Vector3 point)
     {
-        yield return new WaitForSeconds(.1f);
+        yield return new WaitForSeconds(.01f);
 
          if (Physics.Raycast(shootPos,(point - shootPos), out hit, Mathf.Infinity))
          {
